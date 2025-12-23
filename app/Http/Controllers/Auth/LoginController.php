@@ -13,9 +13,14 @@ use App\Http\Controllers\Controller;
 // ↑ Import class Controller sebagai parent class
 
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Support\Facades\Auth;
+use Laravel\Socialite\Facades\Socialite;
+use App\Models\User;
+use Exception;
 
 // ↑ Import trait yang berisi logic login (attempt, logout, dll)
 // Trait adalah kumpulan method yang bisa di-reuse oleh banyak class
+
 
 class LoginController extends Controller
 {
@@ -29,6 +34,8 @@ class LoginController extends Controller
     // - sendFailedLoginResponse() → Return error jika salah password
     // ================================================
     use AuthenticatesUsers;
+
+    
 
     /**
      * Redirect setelah login berhasil.
@@ -46,6 +53,41 @@ class LoginController extends Controller
      *
      * Di sini kita mengatur middleware (filter) untuk controller ini.
      */
+
+        public function redirectToGoogle()
+        {
+            return Socialite::driver('google')->redirect();
+        }
+
+        public function handleGoogleCallback()
+        {
+            try {
+                $user = Socialite::driver('google')->user();
+                
+                // Cari user berdasarkan email atau buat user baru jika belum ada
+                $finduser = User::where('email', $user->email)->first();
+        
+                if($finduser){
+                    Auth::login($finduser);
+                    return redirect()->intended('dashboard');
+                } else {
+                    $newUser = User::create([
+                        'name' => $user->name,
+                        'email' => $user->email,
+                        'google_id'=> $user->id,
+                        'password' => encrypt('123456dummy') // Sebaiknya buat logic password yang aman
+                    ]);
+        
+                    Auth::login($newUser);
+                    return redirect()->intended('dashboard');
+                }
+        
+            } catch (Exception $e) {
+                return redirect('login')->with('error', 'Gagal login menggunakan Google.');
+            }
+        }
+
+
     public function __construct()
     {
         // ================================================

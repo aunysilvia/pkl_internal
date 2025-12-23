@@ -40,14 +40,14 @@ class GoogleController extends Controller
         // redirect() = Redirect browser ke URL Google OAuth
         // ================================================
 
-        return Socialite::driver('google')
+        // return Socialite::driver('google')
         // ->stateless() // Opsional: Gunakan jika error "InvalidStateException" terus muncul (bypass session state check)
-            ->scopes(['email', 'profile'])
+            // ->scopes(['email', 'profile'])
         // ↑ Scopes menentukan data apa yang kita minta
         // 'email'   = Alamat email user
         // 'profile' = Nama dan foto profil
         // 'openid'  = Otomatis ditambahkan untuk Google
-            ->redirect();
+            // ->redirect();
         // ↑ Ini akan redirect ke URL seperti:
         // https://accounts.google.com/o/oauth2/v2/auth?
         //   client_id=xxx&

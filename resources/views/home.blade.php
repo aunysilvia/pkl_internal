@@ -65,7 +65,7 @@
         <div class="row g-4">
             @foreach($featuredProducts as $product)
             <div class="col-6 col-md-4 col-lg-3">
-                @include('profile.partials.product-card', ['product' => $product])
+                @include('components.product-card', ['product' => $product])
             </div>
             @endforeach
         </div>
@@ -109,7 +109,7 @@
         <div class="row g-4">
             @foreach($latestProducts as $product)
             <div class="col-6 col-md-4 col-lg-3">
-                @include('profile.partials.product-card', ['product' => $product])
+                @include('components.product-card', ['product' => $product])
             </div>
             @endforeach
         </div>
